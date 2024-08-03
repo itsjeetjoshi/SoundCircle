@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:soundcircle/Main%20page.dart';
+import 'gradientText.dart';
 
 void main() {
   runApp(const MyApp());
@@ -69,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(
                 height: 100,
                 child: Text(
-                  "Log-in With",
+                  "Log-in",
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
@@ -77,35 +80,32 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20), // Add spacing between widgets
-              ElevatedButton(
-                style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all(Size(75,50)),
-                  backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
-                  shadowColor: MaterialStateProperty.all(Colors.blueGrey),
-                ),
-                onPressed: null,
-                child: const Text(
-                  "Phone Number",
-                  style: TextStyle(
-                    color: Colors.black,
+              const SizedBox(height: 30), // Add spacing between widgets
+              SizedBox(
+                width: 300,
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0)
+                    ),
+                    hintText: 'Enter your mobile number',
                   ),
                 ),
               ),
-              const SizedBox(height: 20), // Add spacing between widgets
-              ElevatedButton(
-                style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all(Size(150,50)),
-                  backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
-                  shadowColor: MaterialStateProperty.all(Colors.black),
-                ),
-                onPressed: null,
-                child: const Text(
-                  "Email-Id",
-                  style: TextStyle(
-                      color: Colors.black
-                  ),
-                ),
+              const SizedBox(height: 40), // Add spacing between widgets
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Don't have an account?",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  TextButton(onPressed: null, child: Text("Create One",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black54
+                    ),))
+                ],
               )
             ],
           ),
@@ -115,100 +115,3 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class GradientText extends StatelessWidget {
-  final String text;
-  final TextStyle style;
-  final Gradient gradient;
-
-  const GradientText(
-      this.text, {
-        required this.gradient,
-        required this.style,
-      });
-
-  @override
-  Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (bounds) => gradient.createShader(
-        Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-      ),
-      child: Text(
-        text,
-        style: style.copyWith(color: Colors.white),
-      ),
-    );
-  }
-}
-/*Container(
-        height: constraints.maxHeight,
-        width: constraints.maxWidth,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFa8c0ff),
-              Color(0xFF3f2b96),
-            ],
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 150), // Add top margin
-              const SizedBox(
-                height: 100,
-                child: Text(
-                  "Log-in With",
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF3f2b96),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20), // Add spacing between widgets
-              ElevatedButton(
-                style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all(Size(75,50)),
-                  backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
-                  shadowColor: MaterialStateProperty.all(Colors.blueGrey),
-                ),
-                onPressed: null,
-                child: const Text(
-                    "Phone Number",
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20), // Add spacing between widgets
-              ElevatedButton(
-                style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all(Size(150,50)),
-                  backgroundColor: MaterialStateProperty.all(Colors.deepPurpleAccent),
-                  shadowColor: MaterialStateProperty.all(Colors.black),
-                ),
-                onPressed: null,
-                child: const Text(
-                    "Email-Id",
-                  style: TextStyle(
-                    color: Colors.black
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
- */
-/*Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/Login with page.png'),
-            //fit: BoxFit.cover
-          )
-        ),
-      ),*/
