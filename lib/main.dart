@@ -1,10 +1,8 @@
-import 'dart:ui';
+import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:soundcircle/Main%20page.dart';
-import 'gradientText.dart';
+import 'package:soundcircle/gradientText.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,84 +32,43 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 3), () {
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => mainPage()));
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        //height: constraints.maxHeight,
-        //width: constraints.maxWidth,
+        body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF7185c1),
-              Color(0xFF494f66),
-              Color(0xFF292347)
-            ],
+            colors: [Color(0xFF7185c1), Color(0xFF494f66), Color(0xFF292347)],
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 40),
-              const GradientText(
-                'SoundCircle',
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF43309a), // Your start color
-                    Color(0xFF7477cc),
-                    Color(0xFFa4bbfb),// Your end color
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
-              ),
-              const SizedBox(height: 150), // Add top margin
-              const SizedBox(
-                height: 100,
-                child: Text(
-                  "Log-in",
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1f2035),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30), // Add spacing between widgets
-              SizedBox(
-                width: 300,
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0)
-                    ),
-                    hintText: 'Enter your mobile number',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 40), // Add spacing between widgets
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Don't have an account?",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),),
-                  TextButton(onPressed: null, child: Text("Create One",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54
-                    ),))
-                ],
-              )
-            ],
+        child: const Center(
+          child: const GradientText(
+            'SoundCircle',
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF43309a), // Your start color
+                Color(0xFF7477cc),
+                Color(0xFFa4bbfb),// Your end color
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
           ),
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      )
     );
   }
 }
+
 
