@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:soundcircle/loginPage.dart';
 import 'package:soundcircle/gradientText.dart';

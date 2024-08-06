@@ -1,8 +1,6 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
+import 'package:soundcircle/createAccount.dart';
+import 'package:soundcircle/otpPage.dart';
 import 'gradientText.dart';
 
 class loginPage extends StatefulWidget {
@@ -34,7 +32,7 @@ class _loginPageState extends State<loginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
               const GradientText(
                 'SoundCircle',
                 gradient: LinearGradient(
@@ -48,7 +46,7 @@ class _loginPageState extends State<loginPage> {
                 ),
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
               ),
-              const SizedBox(height: 150), // Add top margin
+              const SizedBox(height: 100), // Add top margin
               const SizedBox(
                 height: 100,
                 child: Text(
@@ -72,15 +70,36 @@ class _loginPageState extends State<loginPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 30),
+              SizedBox(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF494f66))
+                  ),
+                    onPressed: (){
+                      Navigator.of(context)
+                          .pushReplacement(MaterialPageRoute(builder: (_) => otpPage()));
+                    },
+                    child: Text("Login",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w300
+                      ),))
+              ),
               const SizedBox(height: 40), // Add spacing between widgets
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Don't have an account?",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),),
-                  TextButton(onPressed: null, child: Text("Create One",
+                  TextButton(
+                      onPressed: (){
+                        Navigator.of(context)
+                            .pushReplacement(MaterialPageRoute(builder: (_) => createAccountPage()));
+                      },
+                      child: Text("Create One",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black54
