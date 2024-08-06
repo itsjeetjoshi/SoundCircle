@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     Timer(Duration(seconds: 1), () {
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => mainPage()));
+          .pushReplacement(MaterialPageRoute(builder: (_) => loginPage()));
     });
   }
 
@@ -45,31 +45,30 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF7185c1), Color(0xFF494f66), Color(0xFF292347)],
-          ),
-        ),
-        child: const Center(
-          child: const GradientText(
-            'SoundCircle',
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Color(0xFF43309a), // Your start color
-                Color(0xFF7477cc),
-                Color(0xFFa4bbfb),// Your end color
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF7185c1), Color(0xFF494f66), Color(0xFF292347)],
             ),
-            style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
           ),
-        ),
-      )
+          child: const Center(
+            child: const GradientText(
+              'SoundCircle',
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF43309a), // Your start color
+                  Color(0xFF7477cc),
+                  Color(0xFFa4bbfb),// Your end color
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
+            ),
+          ),
+        )
     );
   }
 }
-
 

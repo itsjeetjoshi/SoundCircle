@@ -1,15 +1,18 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:soundcircle/gradientText.dart';
+import 'package:flutter/painting.dart';
+import 'gradientText.dart';
 
-class mainPage extends StatefulWidget {
-  const mainPage({super.key});
-
+class loginPage extends StatefulWidget {
+  const loginPage({super.key});
 
   @override
-  State<mainPage> createState() => _mainPageState();
+  State<loginPage> createState() => _loginPageState();
 }
 
-class _mainPageState extends State<mainPage> {
+class _loginPageState extends State<loginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,21 +34,21 @@ class _mainPageState extends State<mainPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 40),
               const GradientText(
                 'SoundCircle',
                 gradient: LinearGradient(
                   colors: [
                     Color(0xFF43309a), // Your start color
                     Color(0xFF7477cc),
-                    Color(0xFFa4bbfb),// Your end color
+                    Color(0xFFa4bbfb), // Your end color
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
               ),
-              const SizedBox(height: 120), // Add top margin
+              const SizedBox(height: 150), // Add top margin
               const SizedBox(
                 height: 100,
                 child: Text(
@@ -57,14 +60,13 @@ class _mainPageState extends State<mainPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20), // Add spacing between widgets
+              const SizedBox(height: 30), // Add spacing between widgets
               SizedBox(
                 width: 300,
                 child: TextField(
-                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20)
+                        borderRadius: BorderRadius.circular(30.0)
                     ),
                     hintText: 'Enter your mobile number',
                   ),
@@ -74,8 +76,15 @@ class _mainPageState extends State<mainPage> {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account?"),
-                  TextButton(onPressed: null, child: Text("Create One"))
+                  Text("Don't have an account?",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  TextButton(onPressed: null, child: Text("Create One",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black54
+                    ),))
                 ],
               )
             ],
