@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:soundcircle/gradientText.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
+import 'feed.dart';
+
 class otpPage extends StatefulWidget {
   const otpPage({super.key});
 
@@ -63,32 +65,9 @@ class _otpPageState extends State<otpPage> {
               },
               //runs when every textfield is filled
               onSubmit: (String verificationCode){
-                showDialog(
-                    context: context,
-                    builder: (context){
-                      return AlertDialog(
-                        title: Text("Verification Code"),
-                        content: Text('Code entered is $verificationCode'),
-                      );
-                    }
-                );
-              }, // end onSubmit
-            ),
-            const SizedBox(height: 40),
-            SizedBox(
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF494f66))
-                    ),
-                    onPressed: (){
-                      Navigator.of(context)
-                          .pushReplacement(MaterialPageRoute(builder: (_) => otpPage()));
-                    },
-                    child: Text("Submit",
-                      style: TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w300
-                      ),))
+                Navigator.of(context)
+                    .pushReplacement(MaterialPageRoute(builder: (_) => feed()));
+              }
             ),
           ],
         ),

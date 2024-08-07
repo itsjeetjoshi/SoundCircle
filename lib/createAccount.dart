@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:soundcircle/gradientText.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:soundcircle/loginPage.dart';
+import 'package:soundcircle/main.dart';
 
 class createAccountPage extends StatefulWidget {
   const createAccountPage({super.key});
@@ -24,20 +27,6 @@ class _createAccountPageState extends State<createAccountPage> {
           child: Center(
             child: Column(
               children: [
-                const SizedBox(height: 30),
-                const GradientText(
-                  'SoundCircle',
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF43309a), // Your start color
-                      Color(0xFF7477cc),
-                      Color(0xFFa4bbfb), // Your end color
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
-                ),
                 const SizedBox(height: 40), // Add top margin
                 const SizedBox(
                   height: 80,
@@ -99,20 +88,44 @@ class _createAccountPageState extends State<createAccountPage> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                SizedBox(
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF494f66))
-                        ),
-                        onPressed: (){
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(builder: (_) => createAccountPage()));
-                        },
-                        child: Text("Submit",
-                          style: TextStyle(
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w300
-                          ),))
+                Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    Color(0xFF494f66))
+                            ),
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                  builder: (_) => loginPage()));
+                            },
+                            child: Text("Back",
+                              style: TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.w300
+                              ),))
+                    ),
+                    SizedBox(width: 25),
+                    SizedBox(
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    Color(0xFF494f66))
+                            ),
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                  builder: (_) => createAccountPage()));
+                            },
+                            child: Text("Submit",
+                              style: TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.w300
+                              ),))
+                    ),
+                  ],
                 ),
               ],
             ),
