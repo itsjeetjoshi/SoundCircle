@@ -31,6 +31,7 @@ dependencies:
   flutter_otp_text_field: ^1.1.0+2
   flutter:
     sdk: flutter
+  firebase_auth: ^4.8.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -53,13 +54,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-  assets:
-    - assets/Create account page.png
-    - assets/Enter otp page.png
-    - assets/Login with email page.png
-    - assets/Login with number page.png
-    - assets/Login with page.png
-    - assets/Main page.png
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:soundcircle/createAccount.dart';
 import 'package:soundcircle/otpPage.dart';
 import 'gradientText.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class loginPage extends StatefulWidget {
   const loginPage({super.key});
@@ -11,6 +12,8 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
+  TextEditingController phoneController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,11 +24,7 @@ class _loginPageState extends State<loginPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF7185c1),
-              Color(0xFF494f66),
-              Color(0xFF292347)
-            ],
+            colors: [Color(0xFF7185c1), Color(0xFF494f66), Color(0xFF292347)],
           ),
         ),
         child: Center(
@@ -62,48 +61,59 @@ class _loginPageState extends State<loginPage> {
               SizedBox(
                 width: 300,
                 child: TextField(
+                  controller: phoneController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0)
-                    ),
+                        borderRadius: BorderRadius.circular(30.0)),
                     hintText: 'Enter your mobile number',
                   ),
                 ),
               ),
               const SizedBox(height: 30),
               SizedBox(
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF494f66))
-                  ),
-                    onPressed: (){
-                      Navigator.of(context)
-                          .pushReplacement(MaterialPageRoute(builder: (_) => otpPage()));
-                    },
-                    child: Text("Login",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w300
-                      ),))
-              ),
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color(0xFF494f66))),
+                      onPressed: () async {
+                        await FirebaseAuth.instance.verifyPhoneNumber(
+                            verificationCompleted:
+                                (PhoneAuthCredential credential) {},
+                            verificationFailed: (FirebaseAuthException e) {},
+                            codeSent:
+                                (String verificationId, int? recentToken) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(builder: (_) => otpPage(verificationId: verificationId,)));
+                                },
+                            codeAutoRetrievalTimeout:
+                                (String verificationId) {},
+                            phoneNumber: phoneController.text.toString());
+                      },
+                      child: Text(
+                        "Get OTP",
+                        style: TextStyle(
+                            color: Colors.black54, fontWeight: FontWeight.w300),
+                      ))),
               const SizedBox(height: 40), // Add spacing between widgets
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account?",
+                  Text(
+                    "Don't have an account?",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                    ),),
+                    ),
+                  ),
                   TextButton(
-                      onPressed: (){
-                        Navigator.of(context)
-                            .pushReplacement(MaterialPageRoute(builder: (_) => createAccountPage()));
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (_) => createAccountPage()));
                       },
-                      child: Text("Create One",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black54
-                    ),))
+                      child: Text(
+                        "Create One",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black54),
+                      ))
                 ],
               )
             ],

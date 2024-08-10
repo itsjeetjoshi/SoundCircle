@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "846731048901",
+    "project_id": "soundcircle-2afcd",
+    "storage_bucket": "soundcircle-2afcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846731048901:android:800b8af63b11a4335b7dac",
+        "android_client_info": {
+          "package_name": "com.example.soundcircle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_h3uFSTkNCyEVJpGtGaSSUk18O_yeUEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

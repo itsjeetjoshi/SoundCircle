@@ -1,11 +1,17 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:soundcircle/gradientText.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:soundcircle/loginPage.dart';
 
 import 'feed.dart';
 
 class otpPage extends StatefulWidget {
-  const otpPage({super.key});
+  String verificationId;
+
+  otpPage({super.key, required this.verificationId});
 
   @override
   State<otpPage> createState() => _otpPageState();
@@ -54,21 +60,32 @@ class _otpPageState extends State<otpPage> {
             ),
             const SizedBox(height: 30),
             OtpTextField(
-              numberOfFields: 6,
-              borderColor: Color(0xFF292347),
-              borderRadius:   BorderRadius.all(Radius.circular(10.0)),
-              //set to true to show as box or false to show as dash
-              showFieldAsBox: true,
-              //runs when a code is typed in
-              onCodeChanged: (String code) {
-                //handle validation or checks here
-              },
-              //runs when every textfield is filled
-              onSubmit: (String verificationCode){
-                Navigator.of(context)
-                    .pushReplacement(MaterialPageRoute(builder: (_) => feed()));
-              }
-            ),
+                numberOfFields: 6,
+                borderColor: Color(0xFF292347),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                //set to true to show as box or false to show as dash
+                showFieldAsBox: true,
+                //runs when a code is typed in
+                onCodeChanged: (String code) {
+                  //handle validation or checks here
+                },
+                //runs when every textfield is filled
+                onSubmit: (String verificationCode) async {
+                  try {
+                    PhoneAuthCredential credential =
+                        await PhoneAuthProvider.credential(
+                            verificationId: widget.verificationId,
+                            smsCode: verificationCode);
+                    FirebaseAuth.instance.signInWithCredential(credential).then((value){
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => feed()));
+                    });
+                  } catch (e) {
+                    log(e.toString());
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => loginPage()));
+                  }
+                }),
           ],
         ),
       ),
