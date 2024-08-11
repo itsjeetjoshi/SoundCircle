@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:soundcircle/feed.dart';
 import 'package:soundcircle/loginPage.dart';
 import 'package:soundcircle/gradientText.dart';
 import 'package:soundcircle/loginPage.dart';
@@ -36,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     Timer(Duration(seconds: 1), () {
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => loginPage()));
+          .pushReplacement(MaterialPageRoute(builder: (_) => feed()));
     });
   }
 

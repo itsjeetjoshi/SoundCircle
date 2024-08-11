@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:soundcircle/createAccount.dart';
 import 'package:soundcircle/otpPage.dart';
@@ -82,6 +84,7 @@ class _loginPageState extends State<loginPage> {
                             verificationFailed: (FirebaseAuthException e) {},
                             codeSent:
                                 (String verificationId, int? recentToken) {
+                              log("ok");
                                   Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(builder: (_) => otpPage(verificationId: verificationId,)));
                                 },

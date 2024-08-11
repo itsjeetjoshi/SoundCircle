@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'reusedComponents/profileCard.dart';
 import 'gradientText.dart';
@@ -10,6 +12,13 @@ class feed extends StatefulWidget {
 }
 
 class _feedState extends State<feed> {
+  bool _showProfileCard = false;
+
+  void _toggleProfileCard() {
+    setState(() {
+      _showProfileCard = !_showProfileCard;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,8 +60,9 @@ class _feedState extends State<feed> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context)
-                            .pushReplacement(MaterialPageRoute(builder: (_) => profileCard()));
+                        profileCard(
+
+                        );
                         print('Card $index tapped');
                       },
                       child: Card(
@@ -129,6 +139,28 @@ class _feedState extends State<feed> {
             ],
           ),
         ),
+      ),
+    );
+  }
+  Widget _buildOverlay() {
+    return Positioned.fill(
+      child: Stack(
+        children: [
+          // Blurred background
+          GestureDetector(
+            onTap: _toggleProfileCard,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+              ),
+            ),
+          ),
+          // Profile card in the center
+          Center(
+            child: profileCard(),
+          ),
+        ],
       ),
     );
   }
