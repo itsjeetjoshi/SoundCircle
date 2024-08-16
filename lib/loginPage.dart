@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:soundcircle/createAccount.dart';
 import 'package:soundcircle/otpPage.dart';

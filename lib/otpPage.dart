@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:soundcircle/gradientText.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:soundcircle/loginPage.dart';
-
 import 'feed.dart';
 
 class otpPage extends StatefulWidget {

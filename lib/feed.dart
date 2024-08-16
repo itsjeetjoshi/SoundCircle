@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'reusedComponents/profileCard.dart';
 import 'gradientText.dart';
@@ -140,22 +139,27 @@ class _feedState extends State<feed> {
   }
 
   Widget buildOverlay() {
-    return Positioned.fill(
-      child: Stack(
-        children: [
-          GestureDetector(
-            onTap: _toggleProfileCard,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
+    return Align(
+      alignment: Alignment.center,
+      child: SizedBox(
+        height: 600,
+        width: 300,
+        child: Stack(
+          children: [
+            GestureDetector(
+              onTap: _toggleProfileCard,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                ),
               ),
             ),
-          ),
-          Center(
-            child: profileCard(),
-          ),
-        ],
+            Center(
+              child: profileCard(),
+            ),
+          ],
+        ),
       ),
     );
   }
