@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:soundcircle/gradientText.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:soundcircle/loginPage.dart';
-import 'package:soundcircle/main.dart';
+import 'package:image_picker/image_picker.dart';
 
 class createAccountPage extends StatefulWidget {
   const createAccountPage({super.key});
@@ -13,6 +12,8 @@ class createAccountPage extends StatefulWidget {
 }
 
 class _createAccountPageState extends State<createAccountPage> {
+  XFile? _imageFile = null;
+  final ImagePicker _picker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +28,20 @@ class _createAccountPageState extends State<createAccountPage> {
           child: Center(
             child: Column(
               children: [
+                const SizedBox(height: 30),
+                const GradientText(
+                  'SoundCircle',
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF43309a), // Your start color
+                      Color(0xFF7477cc),
+                      Color(0xFFa4bbfb), // Your end color
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
+                ),
                 const SizedBox(height: 40), // Add top margin
                 const SizedBox(
                   height: 80,
@@ -39,6 +54,8 @@ class _createAccountPageState extends State<createAccountPage> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 30),
+                imageProfile(),
                 const SizedBox(height: 20), // Add spacing between widgets
                 SizedBox(
                   width: 300,
@@ -130,6 +147,65 @@ class _createAccountPageState extends State<createAccountPage> {
               ],
             ),
           ),
-        ));
+        )
+    );
+  }
+  Widget imageProfile(){
+    return Stack(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundImage: _imageFile==null? AssetImage("assets/profileImage.png"): FileImage(File(_imageFile!.path)) as ImageProvider,
+        ),
+        Positioned(
+            bottom: 1,
+            right: 2,
+            child: InkWell(
+              onTap: (){
+                showModalBottomSheet(
+                    context: context,
+                    builder: ((builder) => bottomSheet())
+                );
+              },
+              child: Icon(
+                Icons.camera_alt,
+                color: Colors.blueGrey,
+                size: 20
+              ),
+            )
+        )
+      ],
+    );
+  }
+  Widget bottomSheet(){
+    return Container(
+      height: 100,
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        children: [
+          Text(
+              "Choose profile image",
+            style: TextStyle(
+              fontSize: 20.0
+            ),
+          ),
+          TextButton.icon(
+            icon: Icon(Icons.browse_gallery),
+            onPressed: (){
+              takePhoto(ImageSource.gallery);
+            },
+            label: Text("Gallery"),
+          )
+        ],
+      ),
+    );
+  }
+  void takePhoto(ImageSource source) async{
+    final pickedFile = await _picker.pickImage(
+        source: source
+    );
+    setState(() {
+      _imageFile = pickedFile!;
+    });
   }
 }
