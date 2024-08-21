@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'reusedComponents/profileCard.dart';
 import 'gradientText.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class feed extends StatefulWidget {
   const feed({super.key});
@@ -18,7 +20,23 @@ class _feedState extends State<feed> {
       _showProfileCard = !_showProfileCard;
     });
   }
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+  Future<void> fetchData() async {
+    final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
 
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, parse the JSON.
+      var data = jsonDecode(response.body);
+      print(data);
+    } else {
+      // If the server did not return a 200 OK response, throw an exception.
+      throw Exception('Failed to load data');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

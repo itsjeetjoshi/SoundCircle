@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     Timer(Duration(seconds: 1), () {
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => loginPage()));
+          .pushReplacement(MaterialPageRoute(builder: (_) => feed()));
     });
   }
 
