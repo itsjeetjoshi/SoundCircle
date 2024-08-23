@@ -14,7 +14,7 @@ class feed extends StatefulWidget {
 
 class _feedState extends State<feed> {
   bool _showProfileCard = false;
-
+  var data;
   void _toggleProfileCard() {
     setState(() {
       _showProfileCard = !_showProfileCard;
@@ -26,15 +26,18 @@ class _feedState extends State<feed> {
     fetchData();
   }
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
-
-    if (response.statusCode == 200) {
-      // If the server returns a 200 OK response, parse the JSON.
-      var data = jsonDecode(response.body);
-      print(data);
-    } else {
-      // If the server did not return a 200 OK response, throw an exception.
-      throw Exception('Failed to load data');
+    try {
+      print('Fetching data...');
+      final response = await http.get(Uri.parse('http://192.168.29.105:3000/User'));
+      print('Response received');
+      print(response);
+      if (response.statusCode == 200) {
+        data = jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
   @override
@@ -99,7 +102,7 @@ class _feedState extends State<feed> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'User ${index + 1}',
+                                          data['userName'],
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
