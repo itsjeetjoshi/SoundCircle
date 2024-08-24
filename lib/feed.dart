@@ -14,7 +14,7 @@ class feed extends StatefulWidget {
 
 class _feedState extends State<feed> {
   bool _showProfileCard = false;
-  var data;
+  List<dynamic> data = [];
   void _toggleProfileCard() {
     setState(() {
       _showProfileCard = !_showProfileCard;
@@ -27,10 +27,7 @@ class _feedState extends State<feed> {
   }
   Future<void> fetchData() async {
     try {
-      print('Fetching data...');
-      final response = await http.get(Uri.parse('http://192.168.29.105:3000/User'));
-      print('Response received');
-      print(response);
+      final response = await http.get(Uri.parse('http://192.168.56.1:3000/User'));
       if (response.statusCode == 200) {
         data = jsonDecode(response.body);
       } else {
@@ -39,6 +36,14 @@ class _feedState extends State<feed> {
     } catch (e) {
       print('Error: $e');
     }
+  }
+  String getUsername(int index){
+    String userName = data[index]['userName'];
+    return userName;
+  }
+  int getAge(int index){
+    int age = data[index]['age'];
+    return age;
   }
   @override
   Widget build(BuildContext context) {
@@ -79,7 +84,7 @@ class _feedState extends State<feed> {
                   const SizedBox(height: 20),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: 5, // Number of profile cards
+                      itemCount: data.length, // Number of profile cards
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
@@ -102,14 +107,14 @@ class _feedState extends State<feed> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          data['userName'],
-                                          style: TextStyle(
+                                          "${getUsername(index)}",
+                                          style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         Text(
-                                          'Age ${20 + index}',
+                                          'Age ${getAge(index)}',
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.grey[600],
