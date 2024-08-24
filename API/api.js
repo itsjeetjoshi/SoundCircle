@@ -7,9 +7,7 @@ const connection = require('../Connection/conn')
 app.get("/User", (req,res)=>{
     connection.query("select * from User", (err, rows, fields) => {
         if (err) throw err
-        res.send(200, {
-            userName: rows[0].userName
-        })
+        res.send(200, rows)
     })
 })
 
