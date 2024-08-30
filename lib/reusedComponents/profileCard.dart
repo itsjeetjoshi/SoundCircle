@@ -1,86 +1,80 @@
 import 'package:flutter/material.dart';
 
-class profileCard extends StatefulWidget {
-  const profileCard({super.key});
+class ProfileCard extends StatefulWidget {
+  final String userName;
+  final int age;
+
+  const ProfileCard({super.key, required this.userName, required this.age});
 
   @override
-  State<profileCard> createState() => _profileCardState();
+  State<ProfileCard> createState() => _ProfileCardState();
 }
 
-class _profileCardState extends State<profileCard> {
-  int index = 0;
-
+class _ProfileCardState extends State<ProfileCard> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF7185c1), Color(0xFF494f66), Color(0xFF292347)],
-        ),
-      ),
-      child: Center(
-        child: SizedBox(
-          height: 600,
-          width: 300,
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            elevation: 5,
-            child: Row(
+    return Center(
+      child: SizedBox(
+        height: 600,
+        width: 300,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          elevation: 5,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'User ${index + 1}',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Age ${20 + index}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        'This is a short bio of the user. It gives a brief introduction.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[700],
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ],
+                Text(
+                  widget.userName,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.thumb_up_alt),
-                  onPressed: () {
-                    // Handle like action
-                  },
+                const SizedBox(height: 10),
+                Text(
+                  'Age: ${widget.age}',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey[600],
+                  ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.clear),
-                  onPressed: () {
-                    // Handle pass action
-                  },
+                const SizedBox(height: 20),
+                Text(
+                  'This is a short bio of the user. It gives a brief introduction.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.thumb_up_alt),
+                      onPressed: () {
+                        // Handle like action
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        // Handle pass action
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ),
       ),
-    ));
+    );
   }
 }

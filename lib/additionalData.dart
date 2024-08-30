@@ -1,18 +1,21 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:soundcircle/additionalData.dart';
+import 'package:soundcircle/createAccount.dart';
+import 'package:soundcircle/feed.dart';
 import 'package:soundcircle/gradientText.dart';
 import 'package:soundcircle/loginPage.dart';
 import 'package:image_picker/image_picker.dart';
 
-class createAccountPage extends StatefulWidget {
-  const createAccountPage({super.key});
+class additionalDataPage extends StatefulWidget {
+  const additionalDataPage({super.key});
 
   @override
-  State<createAccountPage> createState() => _createAccountPageState();
+  State<additionalDataPage> createState() => _additionalDataPageState();
 }
 
-class _createAccountPageState extends State<createAccountPage> {
+class _additionalDataPageState extends State<additionalDataPage> {
+  XFile? _imageFile = null;
+  final ImagePicker _picker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,19 +44,11 @@ class _createAccountPageState extends State<createAccountPage> {
                   ),
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
                 ),
-                const SizedBox(height: 40), // Add top margin
-                const SizedBox(
-                  height: 80,
-                  child: Text(
-                    "Create Account",
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1f2035),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20), // Add spacing between widgets
+                const SizedBox(height: 30),
+                imageProfile(),
+                const SizedBox(height: 15),
+                const Text('Profile Picture'),
+                const SizedBox(height: 60), // Add spacing between widgets
                 SizedBox(
                   width: 300,
                   child: TextField(
@@ -61,43 +56,7 @@ class _createAccountPageState extends State<createAccountPage> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0)
                       ),
-                      hintText: 'Enter your name',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20), // Add spacing between widgets
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0)
-                      ),
-                      hintText: 'Enter your mobile number',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20), // Add spacing between widgets
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0)
-                      ),
-                      hintText: 'Enter your email-id',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20), // Add spacing between widgets
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0)
-                      ),
-                      hintText: 'Enter your age',
+                      hintText: 'Enter your spotify username',
                     ),
                   ),
                 ),
@@ -113,7 +72,7 @@ class _createAccountPageState extends State<createAccountPage> {
                             onPressed: () {
                               Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
-                                  builder: (_) => loginPage()));
+                                  builder: (_) => createAccountPage()));
                             },
                             child: Text("Back",
                               style: TextStyle(
@@ -131,9 +90,9 @@ class _createAccountPageState extends State<createAccountPage> {
                             onPressed: () {
                               Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
-                                  builder: (_) => additionalDataPage()));
+                                  builder: (_) => feed()));
                             },
-                            child: Text("Next",
+                            child: Text("Submit",
                               style: TextStyle(
                                   color: Colors.black54,
                                   fontWeight: FontWeight.w300
@@ -146,5 +105,63 @@ class _createAccountPageState extends State<createAccountPage> {
           ),
         )
     );
+  }
+  Widget imageProfile(){
+    return Stack(
+      children: [
+        CircleAvatar(
+          radius: 60,
+          backgroundImage: _imageFile==null? AssetImage("assets/profileImage.png"): FileImage(File(_imageFile!.path)) as ImageProvider,
+        ),
+        Positioned(
+            bottom: 1,
+            right: 8,
+            child: InkWell(
+              onTap: (){
+                showModalBottomSheet(
+                    context: context,
+                    builder: ((builder) => bottomSheet())
+                );
+              },
+              child: Icon(
+                  Icons.camera_alt,
+                  color: Colors.blueGrey,
+                  size: 30
+              ),
+            )
+        )
+      ],
+    );
+  }
+  Widget bottomSheet(){
+    return Container(
+      height: 100,
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        children: [
+          Text(
+            "Choose profile image",
+            style: TextStyle(
+                fontSize: 20.0
+            ),
+          ),
+          TextButton.icon(
+            icon: Icon(Icons.browse_gallery),
+            onPressed: (){
+              takePhoto(ImageSource.gallery);
+            },
+            label: Text("Gallery"),
+          )
+        ],
+      ),
+    );
+  }
+  void takePhoto(ImageSource source) async{
+    final pickedFile = await _picker.pickImage(
+        source: source
+    );
+    setState(() {
+      _imageFile = pickedFile!;
+    });
   }
 }
