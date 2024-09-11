@@ -13,6 +13,8 @@ class createAccountPage extends StatefulWidget {
 }
 
 class _createAccountPageState extends State<createAccountPage> {
+  final List<String> genders = ['Male', 'Female'];
+  String? selectedGender;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,9 +43,9 @@ class _createAccountPageState extends State<createAccountPage> {
                   ),
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
                 ),
-                const SizedBox(height: 40), // Add top margin
+                const SizedBox(height: 30), // Add top margin
                 const SizedBox(
-                  height: 80,
+                  height: 50,
                   child: Text(
                     "Create Account",
                     style: TextStyle(
@@ -98,6 +100,30 @@ class _createAccountPageState extends State<createAccountPage> {
                           borderRadius: BorderRadius.circular(30.0)
                       ),
                       hintText: 'Enter your age',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20), // Add spacing between widgets
+                SizedBox(
+                  width: 300,
+                  child: DropdownButtonFormField<String>(
+                    value: selectedGender, // The selected gender
+                    hint: Text('Select Gender'),
+                    items: genders.map((String gender) {
+                      return DropdownMenuItem<String>(
+                        value: gender,
+                        child: Text(gender),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedGender = newValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0)
+                      ),
                     ),
                   ),
                 ),

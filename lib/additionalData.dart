@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:soundcircle/createAccount.dart';
+import 'package:soundcircle/favouriteGenres.dart';
 import 'package:soundcircle/feed.dart';
 import 'package:soundcircle/gradientText.dart';
 import 'package:soundcircle/loginPage.dart';
@@ -44,23 +45,26 @@ class _additionalDataPageState extends State<additionalDataPage> {
                   ),
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 50),
                 imageProfile(),
-                const SizedBox(height: 15),
-                const Text('Profile Picture'),
-                const SizedBox(height: 60), // Add spacing between widgets
+                const SizedBox(height: 25),
+                const Text('Select a Profile Picture', style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w300,
+                ),),
+                SizedBox(height: 60),
                 SizedBox(
                   width: 300,
                   child: TextField(
+                    //controller: phoneController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0)
-                      ),
-                      hintText: 'Enter your spotify username',
+                          borderRadius: BorderRadius.circular(30.0)),
+                      hintText: 'Enter your username for Instagram',
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 50),
                 Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
@@ -90,9 +94,9 @@ class _additionalDataPageState extends State<additionalDataPage> {
                             onPressed: () {
                               Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
-                                  builder: (_) => feed()));
+                                  builder: (_) => favouriteGenres()));
                             },
-                            child: Text("Submit",
+                            child: Text("Next",
                               style: TextStyle(
                                   color: Colors.black54,
                                   fontWeight: FontWeight.w300

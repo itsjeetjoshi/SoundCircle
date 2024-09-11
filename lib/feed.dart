@@ -34,7 +34,7 @@ class _feedState extends State<feed> {
 
   Future<void> fetchData() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.29.105:3000/User'));
+      final response = await http.get(Uri.parse('http://192.168.62.216:3000/User'));
       if (response.statusCode == 200) {
         setState(() {
           data = jsonDecode(response.body);
