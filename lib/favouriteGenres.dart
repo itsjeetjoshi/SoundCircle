@@ -4,7 +4,8 @@ import 'gradientText.dart'; // Assuming you're reusing the GradientText
 import 'artistSelection.dart'; // New page for artist selection
 
 class favouriteGenres extends StatefulWidget {
-  const favouriteGenres({super.key});
+  final int currentUserId;
+  const favouriteGenres({super.key, required this.currentUserId});
 
   @override
   State<favouriteGenres> createState() => _favouriteGenresState();
@@ -47,6 +48,7 @@ class _favouriteGenresState extends State<favouriteGenres> {
       MaterialPageRoute(
         builder: (context) => ArtistSelection(
           selectedGenres: _selectedGenres.map((index) => genres[index]).toList(),
+          currentUserId: widget.currentUserId,
         ),
       ),
     );

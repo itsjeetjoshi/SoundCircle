@@ -6,7 +6,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class feed extends StatefulWidget {
-  const feed({super.key});
+  final int currentUserId;
+  final String phoneNo;
+  const feed({super.key, required this.currentUserId, required this.phoneNo});
 
   @override
   State<feed> createState() => _feedState();
@@ -16,7 +18,7 @@ class _feedState extends State<feed> {
   bool _showProfileCard = false;
   String _selectedUserName = '';
   int _selectedUserAge = 0; // To store the selected user's age
-  List<dynamic> data = [];
+  List<dynamic> jsonResponse = [];
 
   void _toggleProfileCard(String userName, int age) {
     setState(() {
@@ -34,14 +36,31 @@ class _feedState extends State<feed> {
 
   Future<void> fetchData() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.62.216:3000/User'));
-      if (response.statusCode == 200) {
-        setState(() {
-          data = jsonDecode(response.body);
-        });
-        print(data[0]['userName']);
-      } else {
-        throw Exception('Failed to load data');
+      final url = Uri.parse('http://192.168.29.101:3000/getFeed');
+      print(widget.currentUserId);
+      Map<String, dynamic> requestBody = {
+        'userId': widget.currentUserId
+      };
+      try {
+        // Send the POST request
+        final response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',  // Specify the content type if sending JSON
+          },
+          body: json.encode(requestBody),  // Encode the body as JSON
+        );
+        // Check the response status
+        if (response.statusCode == 200) {
+          setState(() {
+            jsonResponse = jsonDecode(response.body);
+          });
+          print('Request was successful');
+        } else {
+          print('Failed with status: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error occurred: $error');
       }
     } catch (e) {
       print('Error: $e');
@@ -49,11 +68,11 @@ class _feedState extends State<feed> {
   }
 
   String getUsername(int index) {
-    return data[index]['userName'];
+    return jsonResponse[index]['userName'];
   }
 
   int getAge(int index) {
-    return data[index]['age'];
+    return jsonResponse[index]['age'];
   }
 
   @override
@@ -95,7 +114,7 @@ class _feedState extends State<feed> {
                   const SizedBox(height: 20),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: data.length,
+                      itemCount: jsonResponse.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:soundcircle/feed.dart';
 import 'gradientText.dart'; // Reusing the GradientText widget
 
 class ArtistSelection extends StatefulWidget {
   final List<String> selectedGenres;
+  final int currentUserId;
 
-  const ArtistSelection({super.key, required this.selectedGenres});
+  const ArtistSelection({super.key, required this.selectedGenres, required this.currentUserId});
 
   @override
   State<ArtistSelection> createState() => _ArtistSelectionState();
@@ -13,28 +15,28 @@ class ArtistSelection extends StatefulWidget {
 class _ArtistSelectionState extends State<ArtistSelection> {
   Map<String, List<String>> genreArtists = {
     'Rock': [
-      'Artist 1', 'Artist 2', 'Artist 3', 'Artist 4', 'Artist 5',
-      'Artist 6', 'Artist 7', 'Artist 8', 'Artist 9', 'Artist 10',
+      'Queen', 'The Beatles', 'The Local Train', 'Farhan Akhtar', 'Strings',
+      'Nirvana', 'Pink Floyd', 'Artist 8', 'Led Zeppelin', 'Kabir Cafe',
     ],
     'Pop': [
-      'Artist 1', 'Artist 2', 'Artist 3', 'Artist 4', 'Artist 5',
-      'Artist 6', 'Artist 7', 'Artist 8', 'Artist 9', 'Artist 10',
+      'Michael Jackson', 'Lucky Ali', 'Ariana Grande', 'Dua Lipa', 'Bruno Mars',
+      'Katy Perry', 'Artist 7', 'Ed Sheeran', 'Adele', 'Palash Sen (Euphoria)',
     ],
     'Hip-Hop': [
-      'Artist 1', 'Artist 2', 'Artist 3', 'Artist 4', 'Artist 5',
-      'Artist 6', 'Artist 7', 'Artist 8', 'Artist 9', 'Artist 10',
+      'Divine', 'Raftaar', 'Emiway Bantai', 'Krsna', 'Jay-Z',
+      'Eminem', 'Kanye West', 'Drake', 'J. Cole', 'Ikka Singh',
     ],
     'Jazz': [
-      'Artist 1', 'Artist 2', 'Artist 3', 'Artist 4', 'Artist 5',
-      'Artist 6', 'Artist 7', 'Artist 8', 'Artist 9', 'Artist 10',
+      'Louis Banks', 'Artist 2', 'Ranjit Barot', 'Sridhar Parthasarathy', 'Prasanna',
+      'Duke Ellington', 'Miles Davis', 'Artist 8', 'Darshan Doshi', 'Rhythm Shaw',
     ],
     'Classical': [
-      'Artist 1', 'Artist 2', 'Artist 3', 'Artist 4', 'Artist 5',
-      'Artist 6', 'Artist 7', 'Artist 8', 'Artist 9', 'Artist 10',
+      'Pandit Hariprasad Chaurasia', 'Ustad Zakir Hussain ', 'Pandit Ravi Shankar', 'Pandit Jasraj', 'Ludwig van Beethoven',
+      'Wolfgang Amadeus Mozart', 'Johann Sebastian Bach', 'Franz Schubert', 'Richard Wagner', 'Nirali Karthik',
     ],
-    'Electronic': [
-      'Artist 1', 'Artist 2', 'Artist 3', 'Artist 4', 'Artist 5',
-      'Artist 6', 'Artist 7', 'Artist 8', 'Artist 9', 'Artist 10',
+    'Bollywood': [
+      'Amit Trivedi', 'Salim-Sulaiman', 'A.R Rahman', 'Arijit Singh', 'Sunidhi Chauhan',
+      'R.D. Burman', 'Kishore Kumar', 'Shaan', 'Sonu Nigam', 'Shreya Ghoshal',
     ],
   };
 
@@ -64,6 +66,34 @@ class _ArtistSelectionState extends State<ArtistSelection> {
         );
       }
     });
+  }
+
+  bool _isValidSelection() {
+    // Ensure at least one artist is selected for each genre
+    for (var genre in widget.selectedGenres) {
+      if (selectedArtists[genre]!.isEmpty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void _onNextButtonPressed() {
+    if (_isValidSelection()) {
+      // Navigate to the next page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => feed(currentUserId: widget.currentUserId, phoneNo: "")), // Replace with your next page
+      );
+    } else {
+      // Show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select at least one artist per genre.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -182,6 +212,18 @@ class _ArtistSelectionState extends State<ArtistSelection> {
                           ),
                         );
                       },
+                    ),
+                  ),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: _isValidSelection() ? _onNextButtonPressed : null,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white, backgroundColor: Colors.green, padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15), // Text color
+                      ),
+                      child: const Text(
+                        'Next',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ),
                 ],

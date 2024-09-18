@@ -1,20 +1,66 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:soundcircle/createAccount.dart';
 import 'package:soundcircle/favouriteGenres.dart';
-import 'package:soundcircle/feed.dart';
 import 'package:soundcircle/gradientText.dart';
-import 'package:soundcircle/loginPage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:ui';
 
 class additionalDataPage extends StatefulWidget {
-  const additionalDataPage({super.key});
+  final String phoneNo;
+  const additionalDataPage({super.key, required this.phoneNo});
 
   @override
   State<additionalDataPage> createState() => _additionalDataPageState();
 }
 
 class _additionalDataPageState extends State<additionalDataPage> {
+
+  List<dynamic> jsonResponse = [];
+  int currentUserId = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      final url = Uri.parse('http://192.168.29.101:3000/getCurrentUserId');
+      Map<String, dynamic> requestBody = {
+        'phoneNo': widget.phoneNo
+      };
+      try {
+        // Send the POST request
+        final response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',  // Specify the content type if sending JSON
+          },
+          body: json.encode(requestBody),  // Encode the body as JSON
+        );
+        // Check the response status
+        if (response.statusCode == 200) {
+          setState(() {
+            jsonResponse = jsonDecode(response.body);
+            currentUserId = jsonResponse[0]['userId'];
+            print(currentUserId);
+          });
+          print('Request was successful');
+        } else {
+          print('Failed with status: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error occurred: $error');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   XFile? _imageFile = null;
   final ImagePicker _picker = ImagePicker();
   @override
@@ -94,7 +140,7 @@ class _additionalDataPageState extends State<additionalDataPage> {
                             onPressed: () {
                               Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
-                                  builder: (_) => favouriteGenres()));
+                                  builder: (_) => favouriteGenres(currentUserId: currentUserId)));
                             },
                             child: Text("Next",
                               style: TextStyle(

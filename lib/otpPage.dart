@@ -9,8 +9,8 @@ import 'feed.dart';
 
 class otpPage extends StatefulWidget {
   String verificationId;
-
-  otpPage({super.key, required this.verificationId});
+  final String phoneNo;
+  otpPage({super.key, required this.verificationId, required this.phoneNo});
 
   @override
   State<otpPage> createState() => _otpPageState();
@@ -77,7 +77,7 @@ class _otpPageState extends State<otpPage> {
                             smsCode: verificationCode);
                     FirebaseAuth.instance.signInWithCredential(credential).then((value){
                       Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => feed()));
+                          MaterialPageRoute(builder: (_) => feed(currentUserId: 0, phoneNo: widget.phoneNo,)));
                     });
                   } catch (e) {
                     log(e.toString());

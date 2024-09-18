@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:soundcircle/additionalData.dart';
 import 'package:soundcircle/gradientText.dart';
 import 'package:soundcircle/loginPage.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class createAccountPage extends StatefulWidget {
   const createAccountPage({super.key});
@@ -14,7 +15,44 @@ class createAccountPage extends StatefulWidget {
 
 class _createAccountPageState extends State<createAccountPage> {
   final List<String> genders = ['Male', 'Female'];
+  TextEditingController userNameController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController phoneNoController = new TextEditingController();
+  TextEditingController ageController = new TextEditingController();
   String? selectedGender;
+  void sendData(String username, String email, String  phoneNo, String age, String gender) async{
+    try {
+      final url = Uri.parse('http://192.168.29.101:3000/createUser');
+      Map<String, dynamic> requestBody = {
+        'username': username,
+        'email': email,
+        'phoneNo': phoneNo,
+        'age': age,
+        'gender': gender,
+      };
+      try {
+        // Send the POST request
+        final response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',  // Specify the content type if sending JSON
+          },
+          body: json.encode(requestBody),  // Encode the body as JSON
+        );
+
+        // Check the response status
+        if (response.statusCode == 200) {
+          print('Request was successful: ${response.body}');
+        } else {
+          print('Failed with status: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error occurred: $error');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +97,7 @@ class _createAccountPageState extends State<createAccountPage> {
                 SizedBox(
                   width: 300,
                   child: TextField(
+                    controller: userNameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0)
@@ -71,6 +110,7 @@ class _createAccountPageState extends State<createAccountPage> {
                 SizedBox(
                   width: 300,
                   child: TextField(
+                    controller: phoneNoController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0)
@@ -83,6 +123,7 @@ class _createAccountPageState extends State<createAccountPage> {
                 SizedBox(
                   width: 300,
                   child: TextField(
+                    controller: emailController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0)
@@ -95,6 +136,7 @@ class _createAccountPageState extends State<createAccountPage> {
                 SizedBox(
                   width: 300,
                   child: TextField(
+                    controller: ageController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0)
@@ -155,9 +197,11 @@ class _createAccountPageState extends State<createAccountPage> {
                                     Color(0xFF494f66))
                             ),
                             onPressed: () {
+                              print(userNameController.text + '' + emailController.text + '' + phoneNoController.text + '' + ageController.text);
+                              sendData(userNameController.text, emailController.text, phoneNoController.text, ageController.text, selectedGender!);
                               Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
-                                  builder: (_) => additionalDataPage()));
+                                  builder: (_) => additionalDataPage(phoneNo: phoneNoController.text)));
                             },
                             child: Text("Next",
                               style: TextStyle(

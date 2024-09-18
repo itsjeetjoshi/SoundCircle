@@ -85,7 +85,7 @@ class _loginPageState extends State<loginPage> {
                                 (String verificationId, int? recentToken) {
                               log("ok");
                                   Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(builder: (_) => otpPage(verificationId: verificationId,)));
+                                      MaterialPageRoute(builder: (_) => otpPage(verificationId: verificationId, phoneNo: phoneController.text,)));
                                 },
                             codeAutoRetrievalTimeout:
                                 (String verificationId) {},
