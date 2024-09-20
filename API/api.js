@@ -16,7 +16,7 @@ app.post("/getFeed", async (req, res) => {
         });
         const possibleConnectionsList = await possibleConnections(req.body.userId);
         var possibleConnectionsUserIds = []
-        var connectionText = []
+        var connectionText = []     
         var percentages = []
         for(let data of possibleConnectionsList){
             possibleConnectionsUserIds.push(data.userId)
@@ -48,22 +48,22 @@ app.post("/getUserById", (req, res) => {
 app.post("/createUser", (req,res)=>{
     connection.query(`insert into user(userName, email, phoneNo, age, gender, sentLikes, recievedLikes, connections) values('${req.body.username}', '${req.body.email}', '${req.body.phoneNo}', '${req.body.age}', '${req.body.gender}', '', '', '')`, (err) => {
         if (err) throw err
-        res.send(200, "ok");
+        res.send(200, "user created");
     })
 })
 app.post("/addGenreArtist", (req, res) => {
     var genres = req.body.genres;
     var artists = req.body.artists;
-    var genresString = genres.join(', ') + ', ';
-    var artistsString = artists.join(', ') + ', ';
+    //var genresString = genres.join(', ') + ', ';
+    //var artistsString = artists.join(', ') + ', ';
 
     connection.query("select userId from user", (err, result) => {
         if (err) throw err;
         if (result.length > 0) {
-            var userId = result[0].userId;
-            connection.query(`insert into userPreference(userId, genres, artists) values(${userId}, '${genresString}', '${artistsString}')`, (err) => {
+            var userId = result[result.length-1].userId;
+            connection.query(`insert into userPreference(userId, genres, artists) values(${userId}, '${genres}', '${artists}')`, (err) => {
                 if (err) throw err;
-                res.status(200).send("ok");
+                res.status(200).send("added");
             });
         } else {
             res.status(404).send("User not found");
@@ -73,7 +73,7 @@ app.post("/addGenreArtist", (req, res) => {
 app.post("/addLike", (req, res) => {
     connection.query(`update user set sentLikes = concat(sentLikes, '${req.body.userId}, ') where userId = ${req.body.currentUserId}`, (err) => {
         if (err) throw err
-        res.send(200, "ok")
+        res.send(200, "like added")
     })
 })
 app.post("/getCurrentUserId", (req, res) => {
