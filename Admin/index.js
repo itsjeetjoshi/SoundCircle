@@ -1,7 +1,15 @@
 console.log("Script loaded");
 document.addEventListener("DOMContentLoaded", function() {
     function getUsers(){
-        fetch("http://localhost:3000/User")
+        fetch("http://localhost:3000/getFeed", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userId: 7
+            })
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -35,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const userName4 = document.getElementById("userName4");
                 const age4 = document.getElementById("age4");
                 const gender4 = document.getElementById("gender4");
+                console.log(jsonData)
                 userName0.innerHTML = jsonData[0].userName;
                 age0.innerHTML = jsonData[0].age;
                 gender0.innerHTML = jsonData[0].gender

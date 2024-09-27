@@ -122,7 +122,8 @@ function possibleConnections(currentUserId){
                 var existingConnections = existingConnectionsString.split(", ") || ''
                 var recievedLikes = recievedLikesString.split(", ") || ''
                 for(var i=0; i<otherUsers.length; i++){
-                    if((otherUsers[i].userId in existingLikes) || (otherUsers[i].userId in existingConnections) || (otherUsers[i].userId in recievedLikes)){
+                    if((existingLikes.includes(otherUsers[i].userId.toString())) || (existingConnections.includes(otherUsers[i].userId.toString())) || (recievedLikes.includes(otherUsers[i].userId.toString()))){
+                        console.log(otherUsers[i].userId)
                         continue
                     }
                     else{
@@ -143,9 +144,8 @@ function checkMusicTaste(currentUserGenres, currentUserArtists, otherUsers, othe
     var currentUserArtistsList = currentUserArtists.split(", ");
     var userMusicTasteMatch = [];
     for (let user of otherUsers) {
-        console.log(user);
-        var otherUserGenresList = otherUserPreference[user.userId].genres.split(", ");
-        var otherUserArtistsList = otherUserPreference[user.userId].artists.split(", ");
+        var otherUserGenresList = otherUserPreference[user.userId-1].genres.split(", ");
+        var otherUserArtistsList = otherUserPreference[user.userId-1].artists.split(", ");
 
         var commonGenres = [];
         var commonArtists = [];
