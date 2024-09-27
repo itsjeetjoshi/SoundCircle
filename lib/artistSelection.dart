@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:soundcircle/feed.dart';
-import 'gradientText.dart'; // Reusing the GradientText widget
+import 'gradientText.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ArtistSelection extends StatefulWidget {
   final List<String> selectedGenres;
@@ -13,21 +15,22 @@ class ArtistSelection extends StatefulWidget {
 }
 
 class _ArtistSelectionState extends State<ArtistSelection> {
+  List<dynamic> jsonResponse = [];
   Map<String, List<String>> genreArtists = {
     'Rock': [
       'Queen', 'The Beatles', 'The Local Train', 'Farhan Akhtar', 'Strings',
-      'Nirvana', 'Pink Floyd', 'Artist 8', 'Led Zeppelin', 'Kabir Cafe',
+      'Nirvana', 'Pink Floyd', 'Strings', 'Led Zeppelin', 'Kabir Cafe',
     ],
     'Pop': [
       'Michael Jackson', 'Lucky Ali', 'Ariana Grande', 'Dua Lipa', 'Bruno Mars',
-      'Katy Perry', 'Artist 7', 'Ed Sheeran', 'Adele', 'Palash Sen (Euphoria)',
+      'Katy Perry', 'Celine Dion', 'Ed Sheeran', 'Adele', 'Palash Sen (Euphoria)',
     ],
     'Hip-Hop': [
       'Divine', 'Raftaar', 'Emiway Bantai', 'Krsna', 'Jay-Z',
       'Eminem', 'Kanye West', 'Drake', 'J. Cole', 'Ikka Singh',
     ],
     'Jazz': [
-      'Louis Banks', 'Artist 2', 'Ranjit Barot', 'Sridhar Parthasarathy', 'Prasanna',
+      'Louis Banks', 'Rickraj', 'Ranjit Barot', 'Sridhar Parthasarathy', 'Prasanna',
       'Duke Ellington', 'Miles Davis', 'Artist 8', 'Darshan Doshi', 'Rhythm Shaw',
     ],
     'Classical': [
@@ -93,6 +96,40 @@ class _ArtistSelectionState extends State<ArtistSelection> {
           duration: Duration(seconds: 2),
         ),
       );
+    }
+  }
+
+  Future<void> fetchData() async {
+    try {
+      final url = Uri.parse('http://192.168.29.101:3000/addGenreArtist');
+      Map<String, dynamic> requestBody = {
+        'userId': widget.currentUserId,
+        'genres': widget.selectedGenres,
+        'artists': selectedArtists
+      };
+      try {
+        // Send the POST request
+        final response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',  // Specify the content type if sending JSON
+          },
+          body: json.encode(requestBody),  // Encode the body as JSON
+        );
+        // Check the response status
+        if (response.statusCode == 200) {
+          setState(() {
+            jsonResponse = jsonDecode(response.body);
+          });
+          print('Request was successful');
+        } else {
+          print('Failed with status: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error occurred: $error');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
