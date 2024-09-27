@@ -79,6 +79,7 @@ app.post("/addLike", (req, res) => {
 app.post("/getCurrentUserId", (req, res) => {
     connection.query(`select userId from user where phoneNo = '${req.body.phoneNo}'`, (err, result) => {
         if (err) throw err
+        console.log(result)
         res.send(200, result)
     })
 })
@@ -90,12 +91,15 @@ function possibleConnections(currentUserId){
         var currentUser
         var otherUsers = []
         var currentUserPreference
-        console.log(currentUserId)
+        var otherUserPreference = []
         connection.query("select * from userPreference", (err, result) => {
             if (err) throw err
             for(let res of result){
                 if(res.userId == currentUserId){
                     currentUserPreference = res
+                }
+                else{
+                    otherUserPreference.push(res)
                 }
             }
         })
@@ -109,49 +113,45 @@ function possibleConnections(currentUserId){
                     otherUsers.push(res)
                 }
             }
-            console.log(currentUser)
             var existingLikesString = currentUser.sentLikes || ''
             var existingConnectionsString = currentUser.connections || ''
             var recievedLikesString = currentUser.recievedLikes || ''
             var possibleConnectionsList = []
             if(existingLikesString!='' && existingConnectionsString!='' && recievedLikesString!=''){
-                var existingLikes = existingLikesString.split(", ")
-                var existingConnections = existingConnectionsString.split(", ")
-                var recievedLikes = recievedLikesString.split(", ")
+                var existingLikes = existingLikesString.split(", ") || ''
+                var existingConnections = existingConnectionsString.split(", ") || ''
+                var recievedLikes = recievedLikesString.split(", ") || ''
                 for(var i=0; i<otherUsers.length; i++){
                     if((otherUsers[i].userId in existingLikes) || (otherUsers[i].userId in existingConnections) || (otherUsers[i].userId in recievedLikes)){
                         continue
                     }
                     else{
-                        possibleConnectionsList.push(otherUsers[i].userId)
+                        possibleConnectionsList.push(otherUsers[i])
                     }
                 }
             }
             else{
                 possibleConnectionsList = otherUsers
             }
-            var possibleConnectionsList = checkMusicTaste(currentUserPreference.genres, currentUserPreference.artists, possibleConnectionsList)
+            var possibleConnectionsList = checkMusicTaste(currentUserPreference.genres, currentUserPreference.artists, possibleConnectionsList, otherUserPreference)
             resolve(possibleConnectionsList)
         })
     })
 }
-function checkMusicTaste(currentUserGenres, currentUserArtists, otherUsers) {
+function checkMusicTaste(currentUserGenres, currentUserArtists, otherUsers, otherUserPreference) {
     var currentUserGenresList = currentUserGenres.split(", ");
     var currentUserArtistsList = currentUserArtists.split(", ");
     var userMusicTasteMatch = [];
-
     for (let user of otherUsers) {
-        var otherUserGenresList = user.genres.split(", ");
-        var otherUserArtistsList = user.artists.split(", ");
+        console.log(user);
+        var otherUserGenresList = otherUserPreference[user.userId].genres.split(", ");
+        var otherUserArtistsList = otherUserPreference[user.userId].artists.split(", ");
 
         var commonGenres = [];
         var commonArtists = [];
 
         var commonGenresString = ''
         var commonArtistsString = ''
-
-        var artistText = '';
-        var percentage = 3;
 
         for (let genre of otherUserGenresList) {
             if (currentUserGenresList.includes(genre)) {
