@@ -29,7 +29,7 @@ class _additionalDataPageState extends State<additionalDataPage> {
 
   Future<void> fetchData() async {
     try {
-      final url = Uri.parse('http://192.168.29.101:3000/getCurrentUserId');
+      final url = Uri.parse('http://169.254.164.116:3000/getCurrentUserId');
       Map<String, dynamic> requestBody = {
         'phoneNo': widget.phoneNo
       };

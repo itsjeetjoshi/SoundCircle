@@ -15,11 +15,11 @@ class ArtistSelection extends StatefulWidget {
 }
 
 class _ArtistSelectionState extends State<ArtistSelection> {
-  List<dynamic> jsonResponse = [];
+  String jsonResponse = '';
   Map<String, List<String>> genreArtists = {
     'Rock': [
       'Queen', 'The Beatles', 'The Local Train', 'Farhan Akhtar', 'Strings',
-      'Nirvana', 'Pink Floyd', 'Strings', 'Led Zeppelin', 'Kabir Cafe',
+      'Nirvana', 'Pink Floyd', 'Led Zeppelin', 'Kabir Cafe',
     ],
     'Pop': [
       'Michael Jackson', 'Lucky Ali', 'Ariana Grande', 'Dua Lipa', 'Bruno Mars',
@@ -34,7 +34,7 @@ class _ArtistSelectionState extends State<ArtistSelection> {
       'Duke Ellington', 'Miles Davis', 'Artist 8', 'Darshan Doshi', 'Rhythm Shaw',
     ],
     'Classical': [
-      'Pandit Hariprasad Chaurasia', 'Ustad Zakir Hussain ', 'Pandit Ravi Shankar', 'Pandit Jasraj', 'Ludwig van Beethoven',
+      'Pandit Hariprasad Chaurasia', 'Ustad Zakir Hussain', 'Pandit Ravi Shankar', 'Pandit Jasraj', 'Ludwig van Beethoven',
       'Wolfgang Amadeus Mozart', 'Johann Sebastian Bach', 'Franz Schubert', 'Richard Wagner', 'Nirali Karthik',
     ],
     'Bollywood': [
@@ -43,27 +43,25 @@ class _ArtistSelectionState extends State<ArtistSelection> {
     ],
   };
 
-  Map<String, List<int>> selectedArtists = {}; // To track selected artists per genre
+  List<String> selectedArtists = []; // Single list to track selected artists
 
   @override
   void initState() {
     super.initState();
-    // Initialize selectedArtists map with empty lists
-    for (var genre in widget.selectedGenres) {
-      selectedArtists[genre] = [];
-    }
   }
 
-  void _selectArtist(String genre, int index) {
+  void _selectArtist(String artist) {
     setState(() {
-      if (selectedArtists[genre]!.contains(index)) {
-        selectedArtists[genre]!.remove(index);
-      } else if (selectedArtists[genre]!.length < 3) {
-        selectedArtists[genre]!.add(index);
+      if (selectedArtists.contains(artist)) {
+        // Remove if already selected
+        selectedArtists.remove(artist);
+      } else if (selectedArtists.length < 3) {
+        // Add artist if less than 3 selected
+        selectedArtists.add(artist);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('You can only select up to 3 artists per genre.'),
+            content: Text('You can only select up to 3 artists.'),
             duration: Duration(seconds: 2),
           ),
         );
@@ -72,40 +70,36 @@ class _ArtistSelectionState extends State<ArtistSelection> {
   }
 
   bool _isValidSelection() {
-    // Ensure at least one artist is selected for each genre
-    for (var genre in widget.selectedGenres) {
-      if (selectedArtists[genre]!.isEmpty) {
-        return false;
-      }
-    }
-    return true;
+    // Ensure at least one artist is selected
+    return selectedArtists.isNotEmpty;
   }
 
-  void _onNextButtonPressed() {
+  void _onNextButtonPressed() async {
+    print("nextbuttonpressed");
     if (_isValidSelection()) {
-      // Navigate to the next page
+      await addGenreArtist(); // Wait for the async function to complete
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => feed(currentUserId: widget.currentUserId, phoneNo: "")), // Replace with your next page
+        MaterialPageRoute(builder: (context) => feed(currentUserId: widget.currentUserId, phoneNo: "")),
       );
     } else {
       // Show an error message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select at least one artist per genre.'),
+          content: Text('Please select at least one artist.'),
           duration: Duration(seconds: 2),
         ),
       );
     }
   }
 
-  Future<void> fetchData() async {
+
+  Future<void> addGenreArtist() async {
     try {
-      final url = Uri.parse('http://192.168.29.101:3000/addGenreArtist');
+      final url = Uri.parse('http://169.254.164.116:3000/addGenreArtist');
       Map<String, dynamic> requestBody = {
-        'userId': widget.currentUserId,
         'genres': widget.selectedGenres,
-        'artists': selectedArtists
+        'artists': selectedArtists,
       };
       try {
         // Send the POST request
@@ -119,7 +113,7 @@ class _ArtistSelectionState extends State<ArtistSelection> {
         // Check the response status
         if (response.statusCode == 200) {
           setState(() {
-            jsonResponse = jsonDecode(response.body);
+            jsonResponse = response.body;
           });
           print('Request was successful');
         } else {
@@ -203,9 +197,10 @@ class _ArtistSelectionState extends State<ArtistSelection> {
                                 ),
                                 itemCount: genreArtists[genre]!.length,
                                 itemBuilder: (context, artistIndex) {
+                                  String artist = genreArtists[genre]![artistIndex];
                                   return GestureDetector(
                                     onTap: () {
-                                      _selectArtist(genre, artistIndex);
+                                      _selectArtist(artist);
                                     },
                                     child: AnimatedContainer(
                                       duration: const Duration(milliseconds: 300),
@@ -213,18 +208,15 @@ class _ArtistSelectionState extends State<ArtistSelection> {
                                         borderRadius: BorderRadius.circular(10),
                                         color: Colors.white.withOpacity(0.1),
                                         border: Border.all(
-                                          color: selectedArtists[genre]!
-                                              .contains(artistIndex)
+                                          color: selectedArtists.contains(artist)
                                               ? Colors.green
                                               : Colors.transparent,
                                           width: 2,
                                         ),
-                                        boxShadow: selectedArtists[genre]!
-                                            .contains(artistIndex)
+                                        boxShadow: selectedArtists.contains(artist)
                                             ? [
                                           BoxShadow(
-                                            color: Colors.green
-                                                .withOpacity(0.5),
+                                            color: Colors.green.withOpacity(0.5),
                                             blurRadius: 10,
                                             spreadRadius: 1,
                                             offset: const Offset(0, 4),
@@ -234,7 +226,7 @@ class _ArtistSelectionState extends State<ArtistSelection> {
                                       ),
                                       child: Center(
                                         child: Text(
-                                          genreArtists[genre]![artistIndex],
+                                          artist,
                                           style: const TextStyle(
                                             color: Colors.white,
                                           ),
@@ -255,7 +247,9 @@ class _ArtistSelectionState extends State<ArtistSelection> {
                     child: ElevatedButton(
                       onPressed: _isValidSelection() ? _onNextButtonPressed : null,
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, backgroundColor: Colors.green, padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15), // Text color
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                       ),
                       child: const Text(
                         'Next',

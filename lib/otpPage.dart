@@ -6,6 +6,8 @@ import 'package:soundcircle/gradientText.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:soundcircle/loginPage.dart';
 import 'feed.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class otpPage extends StatefulWidget {
   String verificationId;
@@ -17,6 +19,51 @@ class otpPage extends StatefulWidget {
 }
 
 class _otpPageState extends State<otpPage> {
+
+  List<dynamic> jsonResponse = [];
+  int currentUserId = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      final url = Uri.parse('http://169.254.164.116:3000/getCurrentUserId');
+      print(widget.phoneNo);
+      Map<String, dynamic> requestBody = {
+        'phoneNo': widget.phoneNo
+      };
+      try {
+        // Send the POST request
+        final response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',  // Specify the content type if sending JSON
+          },
+          body: json.encode(requestBody),  // Encode the body as JSON
+        );
+        // Check the response status
+        if (response.statusCode == 200) {
+          setState(() {
+            jsonResponse = jsonDecode(response.body);
+            currentUserId = jsonResponse[0]['userId'];
+            print(currentUserId);
+          });
+          print('Request was successful');
+        } else {
+          print('Failed with status: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error occurred: $error');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,8 +124,8 @@ class _otpPageState extends State<otpPage> {
                             smsCode: verificationCode);
                     FirebaseAuth.instance.signInWithCredential(credential).then((value){
                       Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => feed(currentUserId: 0, phoneNo: widget.phoneNo,)));
-                    });
+                          MaterialPageRoute(builder: (_) => feed(currentUserId: currentUserId, phoneNo: '')
+                          ));});
                   } catch (e) {
                     log(e.toString());
                     Navigator.of(context).pushReplacement(

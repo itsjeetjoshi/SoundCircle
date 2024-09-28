@@ -22,7 +22,7 @@ class _createAccountPageState extends State<createAccountPage> {
   String? selectedGender;
   void sendData(String username, String email, String  phoneNo, String age, String gender) async{
     try {
-      final url = Uri.parse('http://192.168.29.101:3000/createUser');
+      final url = Uri.parse('http://169.254.164.116:3000/createUser');
       Map<String, dynamic> requestBody = {
         'username': username,
         'email': email,

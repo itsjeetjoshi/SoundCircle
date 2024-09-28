@@ -19,6 +19,7 @@ class _feedState extends State<feed> {
   String _selectedUserName = '';
   int _selectedUserAge = 0; // To store the selected user's age
   List<dynamic> jsonResponse = [];
+  String jsonLikeResponse = '';
 
   void _toggleProfileCard(String userName, int age) {
     setState(() {
@@ -36,7 +37,7 @@ class _feedState extends State<feed> {
 
   Future<void> fetchData() async {
     try {
-      final url = Uri.parse('http://192.168.29.101:3000/getFeed');
+      final url = Uri.parse('http://169.254.164.116:3000/getFeed');
       print(widget.currentUserId);
       Map<String, dynamic> requestBody = {
         'userId': widget.currentUserId
@@ -66,9 +67,45 @@ class _feedState extends State<feed> {
       print('Error: $e');
     }
   }
+  Future<void> sendLike(int userId) async {
+    try {
+      final url = Uri.parse('http://169.254.164.116:3000/addLike');
+      Map<String, dynamic> requestBody = {
+        'userId': userId,
+        'currentUserId': widget.currentUserId
+      };
+      try {
+        // Send the POST request
+        final response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',  // Specify the content type if sending JSON
+          },
+          body: json.encode(requestBody),  // Encode the body as JSON
+        );
+        // Check the response status
+        if (response.statusCode == 200) {
+          setState(() {
+            jsonLikeResponse = response.body;
+          });
+          print('Request was successful');
+        } else {
+          print('Failed with status: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error occurred: $error');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   String getUsername(int index) {
     return jsonResponse[index]['userName'];
+  }
+
+  int getUserId(int index) {
+    return jsonResponse[index]['userId'];
   }
 
   int getAge(int index) {
@@ -166,7 +203,7 @@ class _feedState extends State<feed> {
                                   IconButton(
                                     icon: const Icon(Icons.thumb_up_alt),
                                     onPressed: () {
-                                      // Handle like action
+                                      sendLike(getUserId(index));
                                     },
                                   ),
                                   IconButton(
