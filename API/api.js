@@ -54,14 +54,14 @@ app.post("/createUser", (req,res)=>{
 app.post("/addGenreArtist", (req, res) => {
     var genres = req.body.genres;
     var artists = req.body.artists;
-    //var genresString = genres.join(', ') + ', ';
-    //var artistsString = artists.join(', ') + ', ';
-
+    var genresString = genres.join(', ') + ', ';
+    var artistsString = artists.join(', ') + ', ';
+    console.log(1)
     connection.query("select userId from user", (err, result) => {
         if (err) throw err;
         if (result.length > 0) {
             var userId = result[result.length-1].userId;
-            connection.query(`insert into userPreference(userId, genres, artists) values(${userId}, '${genres}', '${artists}')`, (err) => {
+            connection.query(`insert into userPreference(userId, genres, artists) values(${userId}, '${genresString}', '${artistsString}')`, (err) => {
                 if (err) throw err;
                 res.status(200).send("added");
             });
@@ -73,8 +73,11 @@ app.post("/addGenreArtist", (req, res) => {
 app.post("/addLike", (req, res) => {
     connection.query(`update user set sentLikes = concat(sentLikes, '${req.body.userId}, ') where userId = ${req.body.currentUserId}`, (err) => {
         if (err) throw err
-        res.send(200, "like added")
     })
+    connection.query(`update user set recievedLikes = concat(recievedLikes, '${req.body.currentUserId}, ') where userId = ${req.body.userId}`, (err) => {
+        if (err) throw err
+    })
+    res.send(200, "like added")
 })
 app.post("/getCurrentUserId", (req, res) => {
     connection.query(`select userId from user where phoneNo = '${req.body.phoneNo}'`, (err, result) => {
@@ -119,6 +122,7 @@ function possibleConnections(currentUserId){
             var possibleConnectionsList = []
             if(existingLikesString!='' && existingConnectionsString!='' && recievedLikesString!=''){
                 var existingLikes = existingLikesString.split(", ") || ''
+                console.log(existingLikes)
                 var existingConnections = existingConnectionsString.split(", ") || ''
                 var recievedLikes = recievedLikesString.split(", ") || ''
                 for(var i=0; i<otherUsers.length; i++){
@@ -144,8 +148,9 @@ function checkMusicTaste(currentUserGenres, currentUserArtists, otherUsers, othe
     var currentUserArtistsList = currentUserArtists.split(", ");
     var userMusicTasteMatch = [];
     for (let user of otherUsers) {
-        var otherUserGenresList = otherUserPreference[user.userId-1].genres.split(", ");
-        var otherUserArtistsList = otherUserPreference[user.userId-1].artists.split(", ");
+        console.log(otherUsers.length)
+        var otherUserGenresList = otherUserPreference[otherUsers.length-1].genres.split(", ");
+        var otherUserArtistsList = otherUserPreference[otherUsers.length-1].artists.split(", ");
 
         var commonGenres = [];
         var commonArtists = [];
